@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+
+    <script>
+      let q = [
+        {
+          ques: "Biggest lake?",
+          opt: ["lake1", "lake2", "lake3", "lake4"],
+          ans: "lake2",
+        },
+        {
+          ques: "Biggest cake?",
+          opt: ["cake1", "lake2", "lake3", "lake4"],
+          ans: "cake1",
+        },
+        {
+          ques: "Biggest snake?",
+          opt: ["lake1", "lake2", "snake3", "lake4"],
+          ans: "snake3",
+        },
+        {
+          ques: "Biggest bake?",
+          opt: ["bake1", "lake2", "lake3", "bake4"],
+          ans: "bake4",
+        },
+        {
+          ques: "Biggest take?",
+          opt: ["take1", "lake2", "lake3", "lake4"],
+          ans: "take1",
+        },
+      ];
+
+      let curQuesIdx = 0;
+      let curScore = 0;
+      let isQuizComplete = false;
+      function nextQues() {
+        if (curQuesIdx > 0) {
+          const userAnswer = checkIfAnswered();
+          if (userAnswer === false) return;
+        }
+
+        if (curQuesIdx >= q.length) {
+          return;
+        }
+
+        const curQues = q[curQuesIdx];
+        const quizQuesDiv = document.getElementById("quiz-question");
+        const quizOptionsDiv = document.getElementById("quiz-options");
+        quizQuesDiv.innerHTML = curQues.ques;
+        let optionsHtmlString = "";
+        curQues.opt.forEach(
+          (o) =>
+            (optionsHtmlString +=
+              '<li><input type="radio" name="options" value="' +
+              o +
+              '">' +
+              o +
+              "</input></li>")
+        );
+        quizOptionsDiv.innerHTML = "<ol>" + optionsHtmlString + "</ol>";
+
+        curQuesIdx++;
+      }
+
+      function checkIfAnswered() {
+        const userAnswer = document.querySelector(
+          "#quiz-options input:checked"
+        );
+        if (userAnswer == undefined) {
+          alert("Please select one answer");
+          return false;
+        }
+
+        if (
+          !isQuizComplete &&
+          curQuesIdx <= q.length &&
+          userAnswer.value == q[curQuesIdx - 1].ans
+        ) {
+          curScore++;
+          if (curQuesIdx == q.length) {
+            isQuizComplete = true;
+          }
+        }
+
+        msg.innerText = `You answered ${curScore} questions correctly.`;
+        return userAnswer.value;
+      }
+      function restartQuiz() {
+        curQuesIdx = 0;
+        curScore = 0;
+        msg.innerText = "";
+        nextQues();
+      }
+    </script>
+  </head>
+  <body>
+    <div id="quiz">
+      <div id="quiz-question"></div>
+      <div id="quiz-options"></div>
+    </div>
+
+    <button onclick="nextQues()">Next</button>
+    <div id="totalScore"></div>
+    <button onclick="restartQuiz()">restart again</button>
+
+    <script>
+      var msg = document.getElementById("totalScore");
+      nextQues();
+    </script>
+  </body>
+</html>
